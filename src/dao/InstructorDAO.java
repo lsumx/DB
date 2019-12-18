@@ -121,6 +121,20 @@ public class InstructorDAO {
         }
     }
 
+    public void refuse(String id,String course_id){
+        try {
+            String sql_delete ="delete from course_select where s_id =? and course_id =?";
+            PreparedStatement preparedStatement =utils.getStatement(sql_delete);
+            preparedStatement.setString(1,id);
+            preparedStatement.setString(2,course_id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     //传入参数应该是教师的id,返回的是学生对这个老师的选课申请arraylist
     public ArrayList<TakeEntity> see_selections(String id){
         ArrayList<TakeEntity> arrayList =new ArrayList<>();

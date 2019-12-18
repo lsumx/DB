@@ -102,6 +102,14 @@ public class TakePane {
                             setGraphic(null);
                             setText(null);
                         }else {
+                            button.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    TakeEntity takeEntity =  getTableView().getItems().get(getIndex());
+                                    data.remove(takeEntity);
+                                    instructorDAO.refuse(takeEntity.getS_id(),takeEntity.getCourse_id());
+                                }
+                            });
                             setText(null);
                             setGraphic(button);
                         }
