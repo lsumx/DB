@@ -20,14 +20,14 @@ import java.util.ArrayList;
 
 public class InstructorDAO {
     JDBCUtils utils =new JDBCUtils();
-    public boolean login_success(String id){
+    public boolean login_success(String id,String password){
         try {
         String sql ="select * from instructor where i_id = ?";
         Connection connection = utils.getConnection();
         PreparedStatement ps =connection.prepareStatement(sql);
         ps.setString(1,id);
         ResultSet resultSet = ps.executeQuery();
-        if (resultSet.next()){
+        if (resultSet.next() && password.equals("000000")){
             System.out.println("登陆成功");
 //            studentEntity.setId(id);
             return true;
@@ -64,7 +64,7 @@ public class InstructorDAO {
                 String course_name="";
                 if (statement1.getResultSet().next())
                     course_name =statement1.getResultSet().getString(1);
-                arrayList.add(new CourseEntity(courses.get(i),course_name,"","","",""));
+                arrayList.add(new CourseEntity(courses.get(i),course_name,"","","","",""));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,10 +110,11 @@ public class InstructorDAO {
             statement.setString(2,course_id);
             statement.executeUpdate();
 
-            String sql_delete ="delete from course_select where s_id =? and course_id =?";
+            String sql_delete ="update course_select set status =? where s_id =? and course_id =?";
             PreparedStatement preparedStatement =utils.getStatement(sql_delete);
-            preparedStatement.setString(1,id);
-            preparedStatement.setString(2,course_id);
+            preparedStatement.setString(1,"1");
+            preparedStatement.setString(2,id);
+            preparedStatement.setString(3,course_id);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -123,10 +124,11 @@ public class InstructorDAO {
 
     public void refuse(String id,String course_id){
         try {
-            String sql_delete ="delete from course_select where s_id =? and course_id =?";
+            String sql_delete ="update course_select set status =? where s_id =? and course_id =?";
             PreparedStatement preparedStatement =utils.getStatement(sql_delete);
-            preparedStatement.setString(1,id);
-            preparedStatement.setString(2,course_id);
+            preparedStatement.setString(1,"0");
+            preparedStatement.setString(2,id);
+            preparedStatement.setString(3,course_id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -148,7 +150,7 @@ public class InstructorDAO {
 
             while (resultSet.next()){
                 String course_id =resultSet.getString(1);
-                String sql_student ="select s_id,reasons from course_select where course_id =?";
+                String sql_student ="select s_id,reason from course_select where course_id =?";
                 PreparedStatement statement1 =utils.getStatement(sql_student);
                 statement1.setString(1,course_id);
                 statement1.execute();
@@ -180,7 +182,7 @@ public class InstructorDAO {
 //                System.out.println(s_id+" "+sname);
                 if (s_id!=null && sname !=null &&course_id !=null &&cname !=null
                 &&s_id!="" && sname !="" &&course_id !="" &&cname !="" )
-                    arrayList.add(new TakeEntity(s_id,sname,course_id,cname,reasons));
+                    arrayList.add(new TakeEntity(s_id,sname,course_id,cname,reasons,""));
             }
 
         } catch (SQLException e) {

@@ -26,11 +26,19 @@ public class GradesPane  {
         primaryStage.setWidth(450);
         primaryStage.setHeight(500);
 
+        String grade ="";
+        if (studentDAO.totalGrades(id)>-1){
+            grade+=studentDAO.totalGrades(id);
+
+        }
+        else
+            grade+="成绩未出";
+        System.out.println(grade);
 
         ObservableList<GradesEntity> data = FXCollections.observableArrayList(studentDAO.get_grades(id));
         TableView<GradesEntity> tableView =new TableView<>();
         tableView.setItems(data);
-        Label label =new Label("成绩单");
+        Label label =new Label("成绩单  总绩点为"+grade);
         label.setFont(new Font("Arial",20));
         tableView.setEditable(true);
 
@@ -44,6 +52,7 @@ public class GradesPane  {
         thirdCol.setCellValueFactory(new PropertyValueFactory<>("grades"));
         thirdCol.setMinWidth(100);
         tableView.getColumns().addAll(firstCol,secCol,thirdCol);
+
 
         VBox vBox =new VBox();
         vBox.getChildren().addAll(label,tableView);

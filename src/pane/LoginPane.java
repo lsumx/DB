@@ -1,7 +1,8 @@
 package pane;
 
+import dao.InitDAO;
 import dao.InstructorDAO;
-import dao.RootDAO;
+import dao.ManagerDAO;
 import dao.StudentDAO;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -22,11 +22,16 @@ import javafx.stage.Stage;
 
 public class LoginPane extends Application {
     String id ="";
+    String pwd ="";
     StudentDAO studentDAO =new StudentDAO();
     InstructorDAO instructorDAO =new InstructorDAO();
     GradesPane gradesPane =new GradesPane();
     SelectPane selectPane =new SelectPane(id);
-    RootDAO rootDAO =new RootDAO();
+    ManagerDAO managerDAO = new ManagerDAO();
+    InitDAO initDAO =new InitDAO();
+//    InitDAO initDAO = new InitDAO();
+    ManagerSelectPane managerSelectPane = new ManagerSelectPane();
+//    RootDAO rootDAO =new RootDAO();
 
     public void start(Stage primaryStage){
         GridPane gridPane =new GridPane();
@@ -40,7 +45,30 @@ public class LoginPane extends Application {
         gridPane.add(username,0,1);
         TextField userTextField =new TextField();
         gridPane.add(userTextField,1,1);
+        Label password =new Label("密码");
+        gridPane.add(password,0,2);
+        PasswordField pwdTextField =new PasswordField();
+        gridPane.add(pwdTextField,1,2);
 
+        boolean consequence = true;
+        consequence = initDAO.check_exam_proper();
+        if (consequence == false) {
+            Text temp = new Text("考试有冲突！");
+            gridPane.add(temp, 0, 2, 2, 1);
+            consequence = true;
+        }
+        consequence = initDAO.check_instructor_proper();
+        if (consequence == false) {
+            Text temp = new Text("教师有冲突！");
+            gridPane.add(temp, 0, 3, 2, 1);
+            consequence = true;
+        }
+        consequence = initDAO.check_time_proper();
+        if (consequence == false) {
+            Text temp = new Text("开课有冲突！");
+            gridPane.add(temp, 0, 4, 2, 1);
+            consequence = true;
+        }
         Button btn = new Button("Sign in");
 
         HBox hbBtn = new HBox(10);
@@ -56,8 +84,9 @@ public class LoginPane extends Application {
             @Override
             public void handle(ActionEvent event) {
                 id =userTextField.getText().trim();
+                pwd=pwdTextField.getText().trim();
                 if (id.contains("S")){
-                    boolean flag =studentDAO.login_success(id);
+                    boolean flag =studentDAO.login_success(id,pwd);
                     if (flag){
                         actiontarget.setFill(Color.FIREBRICK);
                         actiontarget.setText("success");
@@ -73,13 +102,20 @@ public class LoginPane extends Application {
                         System.exit(0);
                     }
                 }else if (id.contains("r")){
-                    if (rootDAO.login_success(id)){
-
-                    }else {
+                    boolean flag = managerDAO.login_success(id,pwd);
+                    if (flag) {
+                        actiontarget.setFill(Color.FIREBRICK);
+                        actiontarget.setText("success");
+                        managerSelectPane.select_pane(id).show();
+                        primaryStage.close();
+                    }
+                    else {
+                        actiontarget.setFill(Color.FIREBRICK);
+                        actiontarget.setText("fail");
                         System.exit(0);
                     }
                 }else if (id.contains("T")){
-                    boolean flag =instructorDAO.login_success(id);
+                    boolean flag =instructorDAO.login_success(id,pwd);
                     if (flag){
                         actiontarget.setFill(Color.FIREBRICK);
                         actiontarget.setText("success");

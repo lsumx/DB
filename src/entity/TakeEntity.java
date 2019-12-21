@@ -6,13 +6,15 @@ public class TakeEntity {
     String course_id;
     String course_name;
     String reasons;
+    String status;
 
-    public TakeEntity(String s_id,String s_name,String course_id,String course_name,String reasons){
+    public TakeEntity(String s_id,String s_name,String course_id,String course_name,String reasons,String status){
         this.course_id =course_id;
         this.course_name =course_name;
         this.s_id =s_id;
         this.s_name =s_name;
         this.reasons =reasons;
+        this.status =status;
     }
 
 
@@ -36,5 +38,10 @@ public class TakeEntity {
 
     public String getReasons() {
         return reasons;
+    }
+
+
+    public String getStatus() {
+        return status;
     }
 }

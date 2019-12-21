@@ -28,15 +28,19 @@ public class SelectPane {
         gridPane.setHgap(5.5);
         gridPane.setVgap(5.5);
         Button grades =new Button("查看成绩");
-        Button courses =new Button("查看课程");
+        Button courses =new Button("查看已选课程");
         Button selectCourse =new Button("选课");
+        Button course =new Button("查看所有课程");
         Button selectForCourse =new Button("选课申请");
+        Button selectionList =new Button("选课申请列表");
         Button quit =new Button("退出登录");
         gridPane.add(grades,0,0);
         gridPane.add(courses,0,1);
         gridPane.add(selectCourse,0,2);
         gridPane.add(selectForCourse,0,3);
-        gridPane.add(quit,0,4);
+        gridPane.add(selectionList,0,4);
+        gridPane.add(course,0,5);
+        gridPane.add(quit,0,6);
         Scene scene =new Scene(gridPane);
         Stage primaryStage =new Stage();
         primaryStage.setScene(scene);
@@ -58,11 +62,26 @@ public class SelectPane {
             }
         });
 
+        course.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                coursePane.section_pane(id).show();
+            }
+        });
+
         selectCourse.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 //                primaryStage.close();
                 selectCoursePane.select_course_pane(id).show();
+            }
+        });
+
+        selectionList.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+//                System.out.println(id);
+                coursePane.selectionPane(id).show();
             }
         });
 
@@ -110,14 +129,7 @@ public class SelectPane {
         Stage primaryStage =new Stage();
         primaryStage.setScene(scene);
 
-//        courses.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-////                System.out.println(1);
-////                primaryStage.close();
-//                coursePane.course_pane_instructor(id);
-//            }
-//        });
+
 //获得对应的课程
         courses.setOnAction(new EventHandler<ActionEvent>() {
             @Override

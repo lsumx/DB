@@ -87,7 +87,7 @@ public class SelectForCoursePane {
 
         primaryStage.setHeight(500);
 
-        primaryStage.setResizable(false);
+//        primaryStage.setResizable(false);
         primaryStage.show();
         return primaryStage;
     }
